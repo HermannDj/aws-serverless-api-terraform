@@ -1,39 +1,23 @@
-# ─── Configuration Checkov ────────────────────────────────────────────────────
-# Checkov = scanner de sécurité statique pour Terraform
-# Il vérifie + de 1000 règles de sécurité (CIS, NIST, AWS best practices)
+# Configuration Checkov
+# Les paramètres directory, output, soft-fail sont gérés par le GitHub Action.
+# Ce fichier ne contient que les skip-check (justifiés ci-dessous).
 
-# Répertoire à scanner
-directory:
-  - .
-
-# Checks à ignorer (avec justification obligatoire)
-# Format : CKV_AWS_XXX
 skip-check:
-  # API Gateway : execution logs nécessite un IAM role au niveau compte
-  # On utilise l'access logging à la place → sécurité équivalente
-  - CKV_AWS_76   # Ensure API Gateway has access logging enabled
-  - CKV_AWS_120  # API Gateway caching (optionnel, coût supplémentaire)
+  # API Gateway execution logs nécessite un IAM role compte (aws_api_gateway_account)
+  # On utilise l'access logging à la place — sécurité équivalente
+  - CKV_AWS_76
 
-  # DynamoDB : PAY_PER_REQUEST vs PROVISIONED
-  # On utilise PROVISIONED pour rester dans le Free Tier (voir README)
-  - CKV_AWS_28   # Ensure DynamoDB point-in-time recovery (désactivé en dev)
+  # API Gateway caching : optionnel, coût supplémentaire non justifié pour le Free Tier
+  - CKV_AWS_120
 
-  # CloudWatch : dashboard (désactivé car coût $3/mois)
-  - CKV_AWS_158  # Ensure CloudWatch log group is encrypted with KMS
-  # KMS custom coûte $1/mois — on utilise AES256 géré par AWS (gratuit)
+  # DynamoDB PITR désactivé en dev intentionnellement (activé en prod via variable)
+  - CKV_AWS_28
 
-  # Lambda : X-Ray désactivé intentionnellement (coût ~$5/million traces)
-  - CKV_AWS_50   # Ensure AWS Lambda functions with X-Ray tracing
+  # CloudWatch KMS custom : coûte $1/mois — on utilise AES256 géré par AWS (gratuit)
+  - CKV_AWS_158
 
-# Branches à exclure du scan
-exclude-path:
-  - bootstrap/
-  - "**/.terraform/**"
-  - "**/.build/**"
+  # Lambda X-Ray : PassThrough intentionnel — X-Ray Active coûte ~$5/million de traces
+  - CKV_AWS_50
 
-# Format de sortie
-output:
-  - cli
-
-# Faire échouer le CI si des checks critiques échouent
-soft_fail: false
+  # SNS : pas de KMS custom pour les notifications (Free Tier)
+  - CKV_AWS_26
