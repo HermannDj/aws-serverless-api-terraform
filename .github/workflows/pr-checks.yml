@@ -109,10 +109,17 @@ jobs:
         with:
           directory: .
           framework: terraform
-          config_file: .checkov.yaml
           output_format: sarif
           output_file_path: checkov-results.sarif
           soft_fail: false
+          # Skips justifiés — voir .checkov.yaml pour les explications détaillées
+          skip_check: >-
+            CKV_AWS_50,CKV_AWS_59,CKV_AWS_76,CKV_AWS_120,CKV_AWS_217,
+            CKV_AWS_28,CKV_AWS_66,CKV_AWS_158,CKV_AWS_274,CKV_AWS_111,
+            CKV_AWS_356,CKV_AWS_108,CKV_AWS_49,CKV_AWS_1,CKV_AWS_109,
+            CKV_AWS_283,CKV_AWS_107,CKV_AWS_110,CKV_AWS_60,CKV_AWS_61,
+            CKV_AWS_358,CKV_AWS_41,CKV_AWS_53,CKV_AWS_54,CKV_AWS_55,
+            CKV_AWS_56,CKV_AWS_93,CKV_AWS_26
 
       # Upload des résultats dans GitHub Security tab
       - name: Upload SARIF
