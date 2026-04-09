@@ -304,3 +304,4 @@ fais un screenshot et sauvegarde-le dans `docs/demo-placeholder.png`.*
 ## License
 
 MIT
+# CI Test Thu 09 Apr 2026 02:26:57 PM EDT
