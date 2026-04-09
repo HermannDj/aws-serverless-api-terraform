@@ -1,8 +1,8 @@
 # aws-serverless-api-terraform
 
 [![Terraform](https://img.shields.io/badge/Terraform-Associate-7B42BC?style=for-the-badge&logo=terraform)](https://www.credly.com/org/hashicorp/badge/hashicorp-certified-terraform-associate-003)
-[![CI — PR Checks](https://github.com/YOUR_GITHUB_USERNAME/aws-serverless-api-terraform/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/aws-serverless-api-terraform/actions/workflows/pr-checks.yml)
-[![CI — Post-merge Plan](https://github.com/YOUR_GITHUB_USERNAME/aws-serverless-api-terraform/actions/workflows/merge-plan.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/aws-serverless-api-terraform/actions/workflows/merge-plan.yml)
+[![CI — PR Checks](https://github.com/HermannDj/aws-serverless-api-terraform/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/HermannDj/aws-serverless-api-terraform/actions/workflows/pr-checks.yml)
+[![CI — Post-merge Plan](https://github.com/HermannDj/aws-serverless-api-terraform/actions/workflows/merge-plan.yml/badge.svg)](https://github.com/HermannDj/aws-serverless-api-terraform/actions/workflows/merge-plan.yml)
 [![AWS Free Tier](https://img.shields.io/badge/AWS-Free%20Tier%20Safe-FF9900?style=flat&logo=amazonaws)](https://aws.amazon.com/free/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
