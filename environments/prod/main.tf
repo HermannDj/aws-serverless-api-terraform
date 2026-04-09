@@ -130,7 +130,7 @@ module "monitoring" {
   api_gateway_name             = "${var.project}-${local.environment}-api"
   api_gateway_stage            = local.environment
   alarm_email                  = var.alarm_email
-  lambda_error_threshold       = 1  # Zero tolerance en prod
+  lambda_error_threshold       = 1 # Zero tolerance en prod
   lambda_duration_threshold_ms = 3000
   api_5xx_threshold            = 1
   api_4xx_threshold            = 20

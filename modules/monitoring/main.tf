@@ -104,8 +104,8 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx" {
   namespace   = "AWS/ApiGateway"
   metric_name = "5XXError"
   dimensions = {
-    ApiName  = var.api_gateway_name
-    Stage    = var.api_gateway_stage
+    ApiName = var.api_gateway_name
+    Stage   = var.api_gateway_stage
   }
 
   treat_missing_data = "notBreaching"

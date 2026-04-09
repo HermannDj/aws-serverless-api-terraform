@@ -42,7 +42,7 @@ resource "aws_iam_role" "apigw_cloudwatch" {
 }
 
 resource "aws_iam_role_policy_attachment" "apigw_cloudwatch" {
-  role       = aws_iam_role.apigw_cloudwatch.name
+  role = aws_iam_role.apigw_cloudwatch.name
   # Managed policy AWS : autorise API Gateway à pousser des logs CloudWatch
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
 }
@@ -113,7 +113,7 @@ resource "aws_api_gateway_integration" "get_items" {
   rest_api_id             = aws_api_gateway_rest_api.this.id
   resource_id             = aws_api_gateway_resource.items.id
   http_method             = aws_api_gateway_method.get_items.http_method
-  integration_http_method = "POST" # Lambda s'invoque toujours en POST, peu importe la méthode HTTP
+  integration_http_method = "POST"      # Lambda s'invoque toujours en POST, peu importe la méthode HTTP
   type                    = "AWS_PROXY" # Proxy = API Gateway transmet tout à Lambda sans transformation
   uri                     = var.lambda_invoke_arn
 }

@@ -115,8 +115,8 @@ resource "aws_cognito_user_pool_client" "this" {
   }
 
   explicit_auth_flows = [
-    "ALLOW_USER_SRP_AUTH",       # Auth sécurisée (SRP = Secure Remote Password)
-    "ALLOW_USER_PASSWORD_AUTH",  # Auth directe user/password (utile pour les tests CLI)
-    "ALLOW_REFRESH_TOKEN_AUTH",  # Renouvellement du token
+    "ALLOW_USER_SRP_AUTH",      # Auth sécurisée (SRP = Secure Remote Password)
+    "ALLOW_USER_PASSWORD_AUTH", # Auth directe user/password (utile pour les tests CLI)
+    "ALLOW_REFRESH_TOKEN_AUTH", # Renouvellement du token
   ]
 }
