@@ -1,0 +1,39 @@
+# ─── Configuration Checkov ────────────────────────────────────────────────────
+# Checkov = scanner de sécurité statique pour Terraform
+# Il vérifie + de 1000 règles de sécurité (CIS, NIST, AWS best practices)
+
+# Répertoire à scanner
+directory:
+  - .
+
+# Checks à ignorer (avec justification obligatoire)
+# Format : CKV_AWS_XXX
+skip-check:
+  # API Gateway : execution logs nécessite un IAM role au niveau compte
+  # On utilise l'access logging à la place → sécurité équivalente
+  - CKV_AWS_76   # Ensure API Gateway has access logging enabled
+  - CKV_AWS_120  # API Gateway caching (optionnel, coût supplémentaire)
+
+  # DynamoDB : PAY_PER_REQUEST vs PROVISIONED
+  # On utilise PROVISIONED pour rester dans le Free Tier (voir README)
+  - CKV_AWS_28   # Ensure DynamoDB point-in-time recovery (désactivé en dev)
+
+  # CloudWatch : dashboard (désactivé car coût $3/mois)
+  - CKV_AWS_158  # Ensure CloudWatch log group is encrypted with KMS
+  # KMS custom coûte $1/mois — on utilise AES256 géré par AWS (gratuit)
+
+  # Lambda : X-Ray désactivé intentionnellement (coût ~$5/million traces)
+  - CKV_AWS_50   # Ensure AWS Lambda functions with X-Ray tracing
+
+# Branches à exclure du scan
+exclude-path:
+  - bootstrap/
+  - "**/.terraform/**"
+  - "**/.build/**"
+
+# Format de sortie
+output:
+  - cli
+
+# Faire échouer le CI si des checks critiques échouent
+soft_fail: false

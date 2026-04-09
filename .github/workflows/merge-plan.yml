@@ -1,0 +1,130 @@
+# ┌─────────────────────────────────────────────────────────────────────────────┐
+# │  WORKFLOW : merge-plan.yml                                                  │
+# │                                                                             │
+# │  Déclenché sur : push vers main (= merge d'une PR)                         │
+# │                                                                             │
+# │  Ce workflow fait un `terraform plan` sur TOUS les environnements.         │
+# │  Pas d'apply automatique — c'est intentionnel pour la sécurité.            │
+# │                                                                             │
+# │  Pourquoi plan seulement ?                                                 │
+# │    • L'apply en prod est irréversible → décision humaine requise           │
+# │    • Le plan sert de "récapitulatif de changements" pour audit             │
+# │    • L'apply dev se fait manuellement depuis la machine du développeur     │
+# └─────────────────────────────────────────────────────────────────────────────┘
+
+name: Post-merge Plan
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.tf"
+      - "lambda_src/**"
+
+env:
+  TF_VERSION: "1.7.4"
+
+jobs:
+  # ─── Plan dev ─────────────────────────────────────────────────────────────────
+  plan-dev:
+    name: "plan dev"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform init
+        run: terraform init
+        working-directory: environments/dev
+
+      - name: Terraform plan
+        run: terraform plan -no-color -out=dev.tfplan
+        working-directory: environments/dev
+
+      # Sauvegarde le plan comme artifact (téléchargeable depuis GitHub Actions)
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-plan-${{ github.sha }}
+          path: environments/dev/dev.tfplan
+          retention-days: 5
+
+  # ─── Plan staging ─────────────────────────────────────────────────────────────
+  plan-staging:
+    name: "plan staging"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform init
+        run: terraform init
+        working-directory: environments/staging
+
+      - name: Terraform plan
+        run: terraform plan -no-color -out=staging.tfplan
+        working-directory: environments/staging
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-plan-${{ github.sha }}
+          path: environments/staging/staging.tfplan
+          retention-days: 5
+
+  # ─── Plan prod ────────────────────────────────────────────────────────────────
+  # Plan UNIQUEMENT — jamais d'apply en CI/CD pour prod
+  plan-prod:
+    name: "plan prod (no apply)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform init
+        run: terraform init
+        working-directory: environments/prod
+
+      - name: Terraform plan
+        run: terraform plan -no-color
+        working-directory: environments/prod

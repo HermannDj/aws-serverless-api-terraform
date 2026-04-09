@@ -1,0 +1,5 @@
+aws_region  = "ca-central-1"
+project     = "serverless-api"
+owner       = "ton-nom"
+cost_center = "personal"
+# alarm_email = "ton-email@exemple.com"
