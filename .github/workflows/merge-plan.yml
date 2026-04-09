@@ -21,6 +21,7 @@ on:
     paths:
       - "**.tf"
       - "lambda_src/**"
+  workflow_dispatch: # Permet de déclencher manuellement depuis GitHub UI
 
 env:
   TF_VERSION: "1.7.4"

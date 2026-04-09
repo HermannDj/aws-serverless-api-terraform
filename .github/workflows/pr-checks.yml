@@ -26,6 +26,7 @@ on:
       - "**.tf"
       - "lambda_src/**"
       - ".github/workflows/**"
+  workflow_dispatch:
 
 env:
   TF_VERSION: "1.7.4"
