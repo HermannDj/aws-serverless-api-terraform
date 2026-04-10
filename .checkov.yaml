@@ -7,6 +7,21 @@ skip-check:
   # X-Ray PassThrough intentionnel — Active coûte ~$5/million de traces
   - CKV_AWS_50
 
+  # KMS pour les variables d'environnement Lambda — coût $1/mois non justifié
+  - CKV_AWS_173
+
+  # Pas de limite de concurrence en dev — réglée en prod via reserved_concurrent_executions
+  - CKV_AWS_115
+
+  # Code signing non requis pour un projet portfolio — complexité sans valeur en dev
+  - CKV_AWS_272
+
+  # Pas de DLQ en dev — les erreurs sont loggées dans CloudWatch
+  - CKV_AWS_116
+
+  # Lambda hors VPC intentionnel — VPC en Free Tier ajoute des frais NAT Gateway
+  - CKV_AWS_117
+
   # ── API Gateway ───────────────────────────────────────────────────────────────
   # Checkov ne reconnaît pas COGNITO_USER_POOLS comme une authorization valide
   # Toutes nos routes ont authorization = "COGNITO_USER_POOLS" + authorizer_id
@@ -16,20 +31,45 @@ skip-check:
   # aws_api_gateway_account dans le module). Access logging est activé.
   - CKV_AWS_76
 
+  # CKV2_AWS_4 : logging_level = "OFF" — exécution logs coûtent cher, access logs activés
+  - CKV2_AWS_4
+
   # API Gateway caching optionnel, coût supplémentaire non justifié pour le Free Tier
   - CKV_AWS_120
 
+  # CKV_AWS_225 : caching désactivé intentionnellement (coût supplémentaire)
+  - CKV_AWS_225
+
+  # X-Ray sur API Gateway stage — coût ~$5/million de traces, désactivé
+  - CKV_AWS_73
+
   # create_before_destroy est défini dans le lifecycle du deployment — faux positif
   - CKV_AWS_217
+
+  # CKV_AWS_237 : create_before_destroy sur aws_api_gateway_deployment, pas rest_api
+  - CKV_AWS_237
+
+  # Client certificate non requis — authentification gérée par Cognito JWT
+  - CKV2_AWS_51
+
+  # Request validation non activée — validation gérée côté Lambda + Cognito
+  - CKV2_AWS_53
 
   # ── DynamoDB ──────────────────────────────────────────────────────────────────
   # PITR désactivé intentionnellement en dev (variable enable_pitr = false)
   # Activé en prod via la variable
   - CKV_AWS_28
 
+  # Auto Scaling non requis — PROVISIONED avec capacité fixe 5/5 suffit pour dev
+  # Auto Scaling en prod est géré via aws_appautoscaling_target
+  - CKV2_AWS_16
+
   # ── CloudWatch ────────────────────────────────────────────────────────────────
   # Retention définie via retention_in_days dans chaque log group — faux positif
   - CKV_AWS_66
+
+  # Retention 7 jours intentionnelle en dev (pas 1 an) — réduit les coûts de stockage
+  - CKV_AWS_338
 
   # KMS custom coûte $1/mois — on utilise AES256 géré par AWS (gratuit, suffisant)
   - CKV_AWS_158
