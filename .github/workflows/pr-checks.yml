@@ -118,10 +118,11 @@ jobs:
             --skip-path bootstrap \
             --skip-path .terraform
 
-      # Upload des résultats dans GitHub Security tab
+      # Upload des résultats dans GitHub Security tab (optionnel — ne bloque pas le CI)
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
         if: always()
+        continue-on-error: true
         with:
           sarif_file: checkov-results.sarif
 
