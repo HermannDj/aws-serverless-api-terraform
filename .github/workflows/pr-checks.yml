@@ -54,6 +54,11 @@ jobs:
 
       - name: Run unit tests
         run: python -m pytest tests/unit/ -v --tb=short --cov=lambda_src --cov-report=term-missing
+        env:
+          TABLE_NAME: test-table
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: testing
+          AWS_SECRET_ACCESS_KEY: testing
 
   # ─── Job 1 : fmt + validate ──────────────────────────────────────────────────
   terraform-fmt-validate:
