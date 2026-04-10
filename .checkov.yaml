@@ -49,6 +49,10 @@ skip-check:
   # CKV_AWS_237 : create_before_destroy sur aws_api_gateway_deployment, pas rest_api
   - CKV_AWS_237
 
+  # WAF non attaché — coût supplémentaire non justifié pour le Free Tier
+  # Sécurité gérée par Cognito + throttling API Gateway
+  - CKV2_AWS_29
+
   # Client certificate non requis — authentification gérée par Cognito JWT
   - CKV2_AWS_51
 
