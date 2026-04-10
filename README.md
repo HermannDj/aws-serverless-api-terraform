@@ -233,6 +233,26 @@ terraform destroy
 
 ---
 
+## Tests
+
+### Unitaires (pytest)
+
+36 tests couvrant l'intégralité du handler Lambda — aucun appel AWS réel, exécution en < 1s :
+
+```bash
+pip install -r lambda_src/requirements-dev.txt
+pytest tests/unit/ -v --cov=lambda_src --cov-report=term-missing
+```
+
+Couverture des cas testés :
+- Routing complet (GET/POST/PUT/DELETE/OPTIONS + route inconnue → 404)
+- Validation des inputs (body vide, champs protégés non modifiables)
+- Gestion d'erreurs DynamoDB (item non trouvé → 404, conflit → 409, erreur serveur → 500)
+- Sérialisation `Decimal` → JSON sans erreur
+- Extraction du `sub` Cognito depuis les claims JWT
+
+---
+
 ## CI/CD GitHub Actions
 
 ### Secrets à configurer
@@ -243,18 +263,20 @@ Dans GitHub : Settings → Secrets and variables → Actions
 |-------------------------|-------------------------------------|
 | `AWS_ACCESS_KEY_ID`     | Clé d'accès AWS pour le CI/CD       |
 | `AWS_SECRET_ACCESS_KEY` | Clé secrète AWS                     |
-| `AWS_REGION`            | Région AWS (ex: `us-east-1`)        |
 
 ### Pipeline
 
 ```
 PR ouverte :
-  fmt -check → validate → tflint → checkov → plan (dev)
-                                                   └─ Commentaire automatique sur la PR
+  pytest (36 tests) ──────────────────────────────────┐
+  terraform fmt + validate ────────────────────────────┤
+                                                        ├─► tflint ──────┐
+                                                        └─► checkov ─────┤
+                                                                          └─► terraform plan (dev)
+                                                                               └─ Commentaire sur la PR
 
 Merge vers main :
   plan (dev) + plan (staging) + plan (prod)
-  └─ Plans sauvegardés comme GitHub Artifacts
   └─ Jamais d'apply automatique
 ```
 
