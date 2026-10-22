@@ -282,17 +282,6 @@ Merge vers main :
 
 ---
 
-## Live Demo
-
-> 📸 Screenshot de l'API en action :
-
-![API Demo](docs/demo-placeholder.png)
-
-*Pour ajouter ton screenshot : déploie l'environnement dev, fais un appel API avec Postman,
-fais un screenshot et sauvegarde-le dans `docs/demo-placeholder.png`.*
-
----
-
 ## Décisions d'architecture
 
 | Décision | Choix | Raison |
@@ -326,4 +315,3 @@ fais un screenshot et sauvegarde-le dans `docs/demo-placeholder.png`.*
 ## License
 
 MIT
-# CI Test Thu 09 Apr 2026 02:26:57 PM EDT
